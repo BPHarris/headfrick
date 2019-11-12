@@ -22,6 +22,11 @@ def get_eof_str() -> str:
     return eof_str
 
 
+def repl():
+    """Brainfuck REPL."""
+    pass
+
+
 def main():
     """Entry point."""
     # Configure argument parser
@@ -33,15 +38,17 @@ def main():
         type=FileType('r'),
         help='the brainfuck source code file',
         metavar='FILE',
-        dest='file',
-        required=True
+        dest='file'
     )
 
     args = parser.parse_args()
 
-    # Get intput
+    # If no file, go to REPL
+    if not args.file:
+        repl()
+
+    # Otherwise, interpret file
     input_str = args.file.read()
-    print(input_str)
     args.file.close()
 
 
