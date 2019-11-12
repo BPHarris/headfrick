@@ -8,7 +8,7 @@ from platform import platform
 class Program:
     """"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """"""
         pass
 
@@ -30,12 +30,12 @@ def get_eof_str() -> str:
     return eof_str
 
 
-def repl():
+def repl() -> None:
     """Brainfuck REPL."""
     pass
 
 
-def main():
+def main() -> None:
     """Entry point."""
     # Configure argument parser
     parser = ArgumentParser(
