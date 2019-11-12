@@ -53,7 +53,7 @@ class Machine:
         if instruction == '.':
             print(chr(self.current()))
         if instruction == ',':
-            self.current(ord(str(input('==> '))[0]))
+            self.current(ord(get_char()))
 
         if instruction == '[':
             return
@@ -83,6 +83,11 @@ class Machine:
         return self.memory.__repr__()
 
 
+def get_char() -> str:
+    """Return the first char in the input."""
+    return str(input('==> '))[0]
+
+
 def get_eof_str() -> str:
     """Return a string representin the platforms EOF input."""
     platform_name = platform().lower()
@@ -106,7 +111,7 @@ def repl() -> int:
     instruction = 'initial'
 
     while instruction:
-        instruction = str(input('==> '))[0]
+        instruction = get_char()
 
         if instruction == 'q':
             break
