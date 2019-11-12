@@ -4,7 +4,11 @@ from argparse import ArgumentParser, FileType
 from sys import stdin, stdout
 from platform import platform
 
-from readchar import readchar
+# from readchar import readchar
+
+EXIT_SUCCESS = 0
+EXIT_FAILURE = 1
+
 
 class Memory(list):
     """Class representing a Programs memory, subclass of list."""
@@ -74,23 +78,27 @@ def get_eof_str() -> str:
     return eof_str
 
 
-def repl() -> None:
+def repl() -> int:
     """Brainfuck REPL."""
     machine = Machine()
     instruction = 'initial'
 
     while instruction:
-        print('==> ', end='')
-        stdout.flush()
-        instruction = str(readchar())
-        print(instruction, type(instruction))
+        instruction = str(input('==> '))[0]
 
         if instruction == 'q':
-            exit()
+            break
+        if instruction == 'p':
+            print(machine)
+        if instruction == 'r':
+            machine = Machine()
 
+        if instruction not in ('>', '<', '+', '-', '.', ',', '[', ']'):
+            print('Invalid instruction.')
+            continue
         machine.run_instruction(instruction)
     
-    exit()
+    return EXIT_SUCCESS
 
 
 def main() -> None:
@@ -111,7 +119,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if not args.file:
-        repl()
+        exit(repl())
 
     instructions = args.file.read()
     args.file.close()
