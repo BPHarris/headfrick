@@ -25,8 +25,8 @@ class Machine:
     CELL_MIN = 0        # Minimum cell value (inclusive)
     CELL_MAX = 256      # Maximum cell value (exclusive)
 
-    overflow  = lambda value: value if value < CELL_MAX else CELL_MIN
-    underflow = lambda value: value if value > CELL_MIN else CELL_MAX
+    overflow  = lambda value: value if value <  CELL_MAX else CELL_MIN
+    underflow = lambda value: value if value >= CELL_MIN else CELL_MAX
 
     def __init__(self) -> None:
         """Create pointer and memory of running program."""
@@ -46,20 +46,38 @@ class Machine:
             self.pointer = max(0, self.pointer - 1)
 
         if instruction == '+':
-            self.memory[self.pointer] = overflow(self.memory[self.pointer] + 1)
+            self.current(self.current() + 1)
         if instruction == '-':
-            self.memory[self.pointer] = underflow(self.memory[self.pointer] - 1)
+            self.current(self.current() - 1)
 
         if instruction == '.':
-            print(chr(self.memory[self.pointer]))
+            print(chr(self.current()))
         if instruction == ',':
-            self.memory[self.pointer] = ord(stdin.read(1))
+            self.current(ord(str(input('==> '))[0]))
 
         if instruction == '[':
             return
         if instruction == ']':
             return
     
+    def __jump_forwards(self):
+        """Brainfuck jump forwards instruction."""
+        pass
+
+    def __jump_backwards(self):
+        """Brainfuck jump backwards instruction."""
+        pass
+
+    def current(self, value=None):
+        """Return the value at the pointer."""
+        if value:
+            return self.__set_current(value)
+        return self.memory[self.pointer]
+    
+    def __set_current(self, value):
+        """Set the value at the pointer."""
+        self.memory[self.pointer] = self.overflow(self.underflow(value))
+
     def __repr__(self):
         """Return string representation."""
         return self.memory.__repr__()
