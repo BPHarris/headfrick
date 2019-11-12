@@ -5,6 +5,14 @@ from sys import stdin, stdout
 from platform import platform
 
 
+class Program:
+    """"""
+
+    def __init__(self):
+        """"""
+        pass
+
+
 def get_eof_str() -> str:
     """Return a string representin the platforms EOF input."""
     platform_name = platform().lower()
