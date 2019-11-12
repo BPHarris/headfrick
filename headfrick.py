@@ -4,6 +4,7 @@ from argparse import ArgumentParser, FileType
 from sys import stdin, stdout
 from platform import platform
 
+from readchar import readchar
 
 class Memory(list):
     """Class representing a Programs memory, subclass of list."""
@@ -36,53 +37,24 @@ class Machine:
     def run_instruction(self, instruction) -> None:
         """Run the given instruction on the machine."""
         if instruction == '>':
-            self.__increment_pointer()
+            self.pointer += 1
         if instruction == '<':
-            self.__decrement_pointer()
+            self.pointer = max(0, self.pointer - 1)
+
         if instruction == '+':
-            self.__increment_cell()
+            self.memory[self.pointer] = overflow(self.memory[self.pointer] + 1)
         if instruction == '-':
-            self.__decrement_cell()
+            self.memory[self.pointer] = underflow(self.memory[self.pointer] - 1)
+
         if instruction == '.':
-            self.__output_cell()
+            print(chr(self.memory[self.pointer]))
         if instruction == ',':
-            self.__input_cell()
+            self.memory[self.pointer] = ord(stdin.read(1))
+
         if instruction == '[':
-            self.__jump_forwards()
+            return
         if instruction == ']':
-            self.__jump_backwards()
-
-    def __increment_pointer():
-        """Brainfuck increment pointer instruction."""
-        self.pointer += 1
-
-    def __decrement_pointer():
-        """Brainfuck decrement pointer instruction."""
-        self.pointer = max(0, self.pointer - 1)
-
-    def __increment_cell():
-        """Brainfuck increment cell instruction."""
-        self.memory[self.pointer] = overflow(self.memory[self.pointer] + 1)
-
-    def __decrement_cell():
-        """Brainfuck decrement cell instruction."""
-        self.memory[self.pointer] = underflow(self.memory[self.pointer] - 1)
-
-    def __output_cell():
-        """Brainfuck output cell instruction, output current cell as ASCII."""
-        print(chr(self.memory[self.pointer]))
-
-    def __input_cell():
-        """Brainfuck input cell instruction, read input into current cell."""
-        self.memory[self.pointer] = ord(stdin.read(1))
-
-    def __jump_forwards():
-        """Brainfuck jump forwards intruction."""
-        pass
-
-    def __jump_backwards():
-        """Brainfuck jump forwards intruction."""
-        pass
+            return
 
 
 def get_eof_str() -> str:
@@ -104,7 +76,21 @@ def get_eof_str() -> str:
 
 def repl() -> None:
     """Brainfuck REPL."""
-    pass
+    machine = Machine()
+    instruction = 'initial'
+
+    while instruction:
+        print('==> ', end='')
+        stdout.flush()
+        instruction = str(readchar())
+        print(instruction, type(instruction))
+
+        if instruction == 'q':
+            exit()
+
+        machine.run_instruction(instruction)
+    
+    exit()
 
 
 def main() -> None:
