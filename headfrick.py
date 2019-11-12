@@ -5,8 +5,18 @@ from sys import stdin, stdout
 from platform import platform
 
 
+class Memory(list):
+    """Class representing a Programs memory, subclass of list."""
+    def __getitem__(self, index):
+        # On access, if cell has not been populated => populate cells upto it
+        if index >= len(self):
+            self += [0] * index - len(self) + 1
+
+        return super().__getitem__(index)
+
+
 class Program:
-    """"""
+    """Class representing a program in execution."""
     CELL_MIN = 0        # Minimum cell value (inclusive)
     CELL_MAX = 256      # Maximum cell value (exclusive)
 
@@ -21,29 +31,30 @@ class Program:
     def run(self, instructions) -> None:
         """Run the brainfuck program."""
         for instruction in instruction:
-            if instruction == '>':
-                self.__increment_pointer()
-            if instruction == '<':
-                self.__decrement_pointer()
-            if instruction == '+':
-                self.__increment_cell()
-            if instruction == '-':
-                self.__decrement_cell()
-            if instruction == '.':
-                self.__output_cell()
-            if instruction == ',':
-                self.__input_cell()
-            if instruction == '[':
-                self.__jump_forwards()
-            if instruction == ']':
-                self.__jump_backwards()
+            self.run_instruction(instruction)
+
+    def run_instruction(self, instruction) -> None:
+        """Run the given instruction on the program."""
+        if instruction == '>':
+            self.__increment_pointer()
+        if instruction == '<':
+            self.__decrement_pointer()
+        if instruction == '+':
+            self.__increment_cell()
+        if instruction == '-':
+            self.__decrement_cell()
+        if instruction == '.':
+            self.__output_cell()
+        if instruction == ',':
+            self.__input_cell()
+        if instruction == '[':
+            self.__jump_forwards()
+        if instruction == ']':
+            self.__jump_backwards()
 
     def __increment_pointer():
         """Brainfuck increment pointer instruction."""
         self.pointer += 1
-
-        if self.pointer >= len(self.memory):
-            self.memory += [0]
 
     def __decrement_pointer():
         """Brainfuck decrement pointer instruction."""
