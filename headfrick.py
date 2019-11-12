@@ -12,12 +12,25 @@ EXIT_FAILURE = 1
 
 class Memory(list):
     """Class representing a Programs memory, subclass of list."""
+    def strech(self, index):
+        """Stratch the memory to contain the index."""
+        if index >= len(self):
+            self += [0] * (index - len(self) + 1)
+
     def __getitem__(self, index):
         # On access, if cell has not been populated => populate cells upto it
-        if index >= len(self):
-            self += [0] * index - len(self) + 1
+        self.strech(index)
 
         return super().__getitem__(index)
+    
+    def __setitem__(self, index, value):
+        # On access, if cell has not been populated => populate cells upto it
+        self.strech(index)
+
+        return super().__setitem__(index, value)
+    
+    def __repr__(self):
+        return super().__repr__()[:-1] + ', ... ]'
 
 
 class Machine:
@@ -31,7 +44,7 @@ class Machine:
     def __init__(self) -> None:
         """Create pointer and memory of running program."""
         self.pointer = 0
-        self.memory = list([0])
+        self.memory = Memory([0])
 
     def run_program(self, program) -> None:
         """Run the given brainfuck program on this machine."""
@@ -42,6 +55,7 @@ class Machine:
         """Run the given instruction on the machine."""
         if instruction == '>':
             self.pointer += 1
+            self.memory.strech(self.pointer)
         if instruction == '<':
             self.pointer = max(0, self.pointer - 1)
 
