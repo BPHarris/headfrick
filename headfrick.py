@@ -59,6 +59,10 @@ class Machine:
             return
         if instruction == ']':
             return
+    
+    def __repr__(self):
+        """Return string representation."""
+        return self.memory.__repr__()
 
 
 def get_eof_str() -> str:
@@ -90,8 +94,10 @@ def repl() -> int:
             break
         if instruction == 'p':
             print(machine)
+            continue
         if instruction == 'r':
             machine = Machine()
+            continue
 
         if instruction not in ('>', '<', '+', '-', '.', ',', '[', ']'):
             print('Invalid instruction.')
