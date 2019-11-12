@@ -25,13 +25,13 @@ class Machine:
     CELL_MIN = 0        # Minimum cell value (inclusive)
     CELL_MAX = 256      # Maximum cell value (exclusive)
 
-    overflow  = lambda value: value if value <  CELL_MAX else CELL_MIN
-    underflow = lambda value: value if value >= CELL_MIN else CELL_MAX
+    overflow  = lambda v: v if v <  Machine.CELL_MAX else Machine.CELL_MIN
+    underflow = lambda v: v if v >= Machine.CELL_MIN else Machine.CELL_MAX
 
     def __init__(self) -> None:
         """Create pointer and memory of running program."""
         self.pointer = 0
-        self.memory = list()
+        self.memory = list([0])
 
     def run_program(self, program) -> None:
         """Run the given brainfuck program on this machine."""
@@ -76,7 +76,7 @@ class Machine:
     
     def __set_current(self, value):
         """Set the value at the pointer."""
-        self.memory[self.pointer] = self.overflow(self.underflow(value))
+        self.memory[self.pointer] = Machine.overflow(Machine.underflow(value))
 
     def __repr__(self):
         """Return string representation."""
