@@ -15,8 +15,8 @@ class Memory(list):
         return super().__getitem__(index)
 
 
-class Program:
-    """Class representing a program in execution."""
+class Machine:
+    """Class representing brainfuck virtual machine."""
     CELL_MIN = 0        # Minimum cell value (inclusive)
     CELL_MAX = 256      # Maximum cell value (exclusive)
 
@@ -28,13 +28,13 @@ class Program:
         self.pointer = 0
         self.memory = list()
 
-    def run(self, instructions) -> None:
-        """Run the brainfuck program."""
+    def run_program(self, program) -> None:
+        """Run the given brainfuck program on this machine."""
         for instruction in instruction:
             self.run_instruction(instruction)
 
     def run_instruction(self, instruction) -> None:
-        """Run the given instruction on the program."""
+        """Run the given instruction on the machine."""
         if instruction == '>':
             self.__increment_pointer()
         if instruction == '<':
@@ -130,7 +130,7 @@ def main() -> None:
     instructions = args.file.read()
     args.file.close()
 
-    Program().run(instructions)
+    Machine().run_program(instructions)
 
 
 if __name__ == '__main__':
