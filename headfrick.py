@@ -7,6 +7,11 @@ from platform import platform
 
 class Program:
     """"""
+    CELL_MIN = 0        # Minimum cell value (inclusive)
+    CELL_MAX = 256      # Maximum cell value (exclusive)
+
+    overflow  = lambda value: value if value < CELL_MAX else CELL_MIN
+    underflow = lambda value: value if value > CELL_MIN else CELL_MAX
 
     def __init__(self) -> None:
         """Create pointer and memory of running program."""
@@ -15,31 +20,50 @@ class Program:
 
     def run(self, instructions) -> None:
         """Run the brainfuck program."""
-        pass
+        for instruction in instruction:
+            if instruction == '>':
+                self.__increment_pointer()
+            if instruction == '<':
+                self.__decrement_pointer()
+            if instruction == '+':
+                self.__increment_cell()
+            if instruction == '-':
+                self.__decrement_cell()
+            if instruction == '.':
+                self.__output_cell()
+            if instruction == ',':
+                self.__input_cell()
+            if instruction == '[':
+                self.__jump_forwards()
+            if instruction == ']':
+                self.__jump_backwards()
 
     def __increment_pointer():
         """Brainfuck increment pointer instruction."""
-        pass
+        self.pointer += 1
+
+        if self.pointer >= len(self.memory):
+            self.memory += [0]
 
     def __decrement_pointer():
         """Brainfuck decrement pointer instruction."""
-        pass
+        self.pointer = max(0, self.pointer - 1)
 
     def __increment_cell():
         """Brainfuck increment cell instruction."""
-        pass
+        self.memory[self.pointer] = overflow(self.memory[self.pointer] + 1)
 
     def __decrement_cell():
         """Brainfuck decrement cell instruction."""
-        pass
+        self.memory[self.pointer] = underflow(self.memory[self.pointer] - 1)
 
     def __output_cell():
         """Brainfuck output cell instruction, output current cell as ASCII."""
-        pass
+        print(chr(self.memory[self.pointer]))
 
     def __input_cell():
         """Brainfuck input cell instruction, read input into current cell."""
-        pass
+        self.memory[self.pointer] = ord(stdin.read(1))
 
     def __jump_forwards():
         """Brainfuck jump forwards intruction."""
