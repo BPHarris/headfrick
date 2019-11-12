@@ -9,7 +9,44 @@ class Program:
     """"""
 
     def __init__(self) -> None:
-        """"""
+        """Create pointer and memory of running program."""
+        self.pointer = 0
+        self.memory = list()
+
+    def run(self, instructions) -> None:
+        """Run the brainfuck program."""
+        pass
+
+    def __increment_pointer():
+        """Brainfuck increment pointer instruction."""
+        pass
+
+    def __decrement_pointer():
+        """Brainfuck decrement pointer instruction."""
+        pass
+
+    def __increment_cell():
+        """Brainfuck increment cell instruction."""
+        pass
+
+    def __decrement_cell():
+        """Brainfuck decrement cell instruction."""
+        pass
+
+    def __output_cell():
+        """Brainfuck output cell instruction, output current cell as ASCII."""
+        pass
+
+    def __input_cell():
+        """Brainfuck input cell instruction, read input into current cell."""
+        pass
+
+    def __jump_forwards():
+        """Brainfuck jump forwards intruction."""
+        pass
+
+    def __jump_backwards():
+        """Brainfuck jump forwards intruction."""
         pass
 
 
@@ -52,13 +89,13 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    # If no file, go to REPL
     if not args.file:
         repl()
 
-    # Otherwise, interpret file
-    input_str = args.file.read()
+    instructions = args.file.read()
     args.file.close()
+
+    Program().run(instructions)
 
 
 if __name__ == '__main__':
