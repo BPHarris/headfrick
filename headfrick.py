@@ -31,7 +31,8 @@ def main():
     """Entry point."""
     # Configure argument parser
     parser = ArgumentParser(
-        description='Interpret a given brainfuck file.'
+        description='Interpret a given brainfuck file. If no file is given ' +
+            'a REPL is provided.'
     )
     parser.add_argument(
         '-f', '--file',
