@@ -4,8 +4,6 @@ from argparse import ArgumentParser, FileType
 from sys import stdin, stdout
 from platform import platform
 
-# from readchar import readchar
-
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
 
@@ -13,20 +11,16 @@ EXIT_FAILURE = 1
 class Memory(list):
     """Class representing a Programs memory, subclass of list."""
     def strech(self, index):
-        """Stratch the memory to contain the index."""
+        """Stretch the memory to contain the index, populating empty cells."""
         if index >= len(self):
             self += [0] * (index - len(self) + 1)
 
     def __getitem__(self, index):
-        # On access, if cell has not been populated => populate cells upto it
-        self.strech(index)
-
+        self.strech(index)  # On read from cell, strech memory if needed
         return super().__getitem__(index)
     
     def __setitem__(self, index, value):
-        # On access, if cell has not been populated => populate cells upto it
-        self.strech(index)
-
+        self.strech(index)  # On write to cell, strech memory if needed
         return super().__setitem__(index, value)
     
     def __repr__(self) -> str:
@@ -35,10 +29,13 @@ class Memory(list):
 
 class Machine:
     """Class representing brainfuck virtual machine."""
-    CELL_MIN = 0        # Minimum cell value (inclusive)
-    CELL_MAX = 256      # Maximum cell value (exclusive)
+    CELL_MIN = 0        # Minimum cell value
+    CELL_MAX = 255      # Maximum cell value
 
-    overflow  = lambda v: v if v <  Machine.CELL_MAX else Machine.CELL_MIN
+    INSTRUCTION_SET = set(['>', '<', '+', '-', '.', ',', '[', ']'])
+
+    # TODO Fix issue where cell or 1 can't be decremented
+    overflow  = lambda v: v if v <= Machine.CELL_MAX else Machine.CELL_MIN
     underflow = lambda v: v if v >= Machine.CELL_MIN else Machine.CELL_MAX
 
     def __init__(self) -> None:
@@ -99,62 +96,40 @@ class Machine:
 
 def get_char() -> str:
     """Return the first char in the input."""
-    return str(input('==> '))[0]
-
-
-def get_eof_str() -> str:
-    """Return a string representin the platforms EOF input."""
-    platform_name = platform().lower()
-    eof_str = 'EOF'
-
-    if 'windows' in platform_name:
-        eof_str = 'Ctrl+Z then Ctrl+ENTER on a newline'
-    if 'macos' in platform_name or 'osx' in platform_name:
-        # TODO verify this
-        eof_str = 'Ctrl+Z'
-    if 'linux' in platform_name or 'unix' in platform_name:
-        # TODO verify this
-        eof_str = 'Ctrl+Z'
-    
-    return eof_str
+    return (str(input('==> ')) + '\n')[0]
 
 
 def repl() -> int:
     """Brainfuck REPL."""
     machine = Machine()
     instruction = 'initial'
+    REPL_COMMANDS = set(['q', 'p', 'r'])
 
     while instruction:
         instruction = get_char()
 
-        if instruction == 'q':
-            break
-        if instruction == 'p':
-            print(machine)
-            continue
-        if instruction == 'r':
-            machine = Machine()
-            continue
-
-        if instruction not in ('>', '<', '+', '-', '.', ',', '[', ']'):
+        if instruction in Machine.INSTRUCTION_SET:
+            machine.run_instruction(instruction)
+        if instruction not in Machine.INSTRUCTION_SET | REPL_COMMANDS:
             print('Invalid instruction.')
-            continue
-        machine.run_instruction(instruction)
+
+        if instruction == 'q':      # q : quit repl
+            break
+        if instruction == 'p':      # p : print machine state
+            print(machine)
+        if instruction == 'r':      # r : reset machine
+            machine = Machine()
     
     return EXIT_SUCCESS
 
 
 def main() -> None:
-    """Entry point."""
-    # Configure argument parser
+    """Parse arguments; run REPL if no file, otherwise exec file."""
     parser = ArgumentParser(
-        description='Interpret a given brainfuck file. If no file is given ' +
-            'a REPL is provided.'
+        description='Interpret a brainfuck file. If no file is given, run the REPL.'
     )
     parser.add_argument(
-        'file', nargs='?',
-        type=FileType('r'),
-        help='the brainfuck source code file'
+        'file', nargs='?', type=FileType('r'), help='the brainfuck source code file'
     )
 
     args = parser.parse_args()
@@ -162,10 +137,8 @@ def main() -> None:
     if not args.file:
         exit(repl())
 
-    instructions = args.file.read()
+    Machine().run_program(args.file.read())
     args.file.close()
-
-    Machine().run_program(instructions)
 
 
 if __name__ == '__main__':
