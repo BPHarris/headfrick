@@ -152,11 +152,9 @@ def main() -> None:
             'a REPL is provided.'
     )
     parser.add_argument(
-        '-f', '--file',
+        'file', nargs='?',
         type=FileType('r'),
-        help='the brainfuck source code file',
-        metavar='FILE',
-        dest='file'
+        help='the brainfuck source code file'
     )
 
     args = parser.parse_args()
