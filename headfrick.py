@@ -50,7 +50,6 @@ class Machine:
         """Run the given instruction on the machine."""
         if instruction == '>':
             self.pointer += 1
-            self.memory.strech(self.pointer)
         if instruction == '<':
             self.pointer = max(0, self.pointer - 1)
 
