@@ -29,7 +29,7 @@ class Memory(list):
 
         return super().__setitem__(index, value)
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return super().__repr__()[:-1] + ', ... ]'
 
 
@@ -92,7 +92,7 @@ class Machine:
         """Set the value at the pointer."""
         self.memory[self.pointer] = Machine.overflow(Machine.underflow(value))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return string representation."""
         return self.memory.__repr__()
 
