@@ -131,14 +131,23 @@ def main() -> None:
     parser.add_argument(
         'file', nargs='?', type=FileType('r'), help='the brainfuck source code file'
     )
+    parser.add_argument(
+        '-d', '--dump', default=False, action='store_const', const=True,
+        help='print the machine state on exit?'
+    )
 
     args = parser.parse_args()
 
     if not args.file:
         exit(repl())
 
-    Machine().run_program(args.file.read())
+    machine = Machine()
+
+    machine.run_program(args.file.read())
     args.file.close()
+
+    if args.dump:
+        print(machine)
 
 
 if __name__ == '__main__':
