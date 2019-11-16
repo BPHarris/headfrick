@@ -24,7 +24,7 @@ class Memory(list):
         return super().__setitem__(index, value)
     
     def __repr__(self) -> str:
-        return super().__repr__()[:-1] + ', ... ]'
+        return super().__repr__()[:-1] + ', 0, 0, 0, ... ]'
 
 
 class Machine:
