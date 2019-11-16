@@ -1,8 +1,6 @@
 """headfrick.py - A simple brainfuck interpreter."""
 
 from argparse import ArgumentParser, FileType
-from sys import stdin, stdout
-from platform import platform
 
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
