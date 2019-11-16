@@ -8,20 +8,22 @@ EXIT_FAILURE = 1
 
 class Memory(list):
     """Class representing a Programs memory, subclass of list."""
-    def strech(self, index):
+    def stretch(self, index):
         """Stretch the memory to contain the index, populating empty cells."""
         if index >= len(self):
             self += [0] * (index - len(self) + 1)
 
     def __getitem__(self, index):
-        self.strech(index)  # On read from cell, strech memory if needed
+        self.stretch(index)  # On read from cell, stretch memory if needed
         return super().__getitem__(index)
     
     def __setitem__(self, index, value):
-        self.strech(index)  # On write to cell, strech memory if needed
+        self.stretch(index)  # On write to cell, stretch memory if needed
         return super().__setitem__(index, value)
     
     def __repr__(self) -> str:
+        # TODO Fix -- doesn't stretch
+        self.stretch(len(self) - 1)  # On print, stretch to show pointer movement
         return super().__repr__()[:-1] + ', ... ]'
 
 
@@ -43,11 +45,14 @@ class Machine:
 
     def run_program(self, program) -> None:
         """Run the given brainfuck program on this machine."""
-        for instruction in instruction:
+        for instruction in program:
             self.run_instruction(instruction)
 
     def run_instruction(self, instruction) -> None:
         """Run the given instruction on the machine."""
+        if instruction == 'p':
+            return
+
         if instruction == '>':
             self.pointer += 1
         if instruction == '<':
@@ -92,29 +97,29 @@ class Machine:
 
 
 def get_char() -> str:
-    """Return the first char in the input."""
+    """Return the first char in the input, takes no input to be a newline."""
     return (str(input('==> ')) + '\n')[0]
 
 
 def repl() -> int:
     """Brainfuck REPL."""
     machine = Machine()
-    instruction = 'initial'
     REPL_COMMANDS = set(['q', 'p', 'r'])
 
-    while instruction:
-        instruction = get_char()
+    while True:
+        instruction = str(input('==> '))
 
-        if instruction in Machine.INSTRUCTION_SET:
-            machine.run_instruction(instruction)
-        if instruction not in Machine.INSTRUCTION_SET | REPL_COMMANDS:
+        if all([i in Machine.INSTRUCTION_SET | set('p') for i in instruction]):
+            machine.run_program(instruction)
+        if any(i not in Machine.INSTRUCTION_SET | REPL_COMMANDS for i in instruction):
             print('Invalid instruction.')
+            continue
 
-        if instruction == 'q':      # q : quit repl
+        if instruction == 'q':          # q : quit repl
             break
-        if instruction == 'p':      # p : print machine state
+        if instruction.endswith('p'):   # p : print machine state
             print(machine)
-        if instruction == 'r':      # r : reset machine
+        if instruction == 'r':          # r : reset machine
             machine = Machine()
     
     return EXIT_SUCCESS
