@@ -2,9 +2,6 @@
 
 from argparse import ArgumentParser, FileType
 
-EXIT_SUCCESS = 0
-EXIT_FAILURE = 1
-
 
 class Memory(list):
     """Class representing a Programs memory, subclass of list."""
@@ -94,8 +91,7 @@ class Machine:
         # On print, stretch memory to show pointer movement
         self.memory.stretch(self.pointer)
 
-        memory = self.memory.__repr__()
-        return memory + '\n ' + self.pointer * '   ' + '^'
+        return str(self.memory) + '\n ' + self.pointer * '   ' + '^'
 
 
 def get_char() -> str:
@@ -103,9 +99,8 @@ def get_char() -> str:
     return (str(input('==> ')) + '\n')[0]
 
 
-def repl() -> int:
+def repl(machine: Machine) -> None:
     """Brainfuck REPL."""
-    machine = Machine()
     REPL_COMMANDS = set(['q', 'p', 'r'])
 
     while True:
@@ -124,7 +119,7 @@ def repl() -> int:
         if instruction == 'r':          # r : reset machine
             machine = Machine()
     
-    return EXIT_SUCCESS
+    return None
 
 
 def main() -> None:
@@ -142,16 +137,18 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    if not args.file:
-        exit(repl())
-
     machine = Machine()
 
-    machine.run_program(args.file.read())
-    args.file.close()
+    if not args.file:
+        repl(machine)
+    else:
+        machine.run_program(args.file.read())
+        args.file.close()
 
     if args.dump:
         print(machine)
+    
+    return None
 
 
 if __name__ == '__main__':
