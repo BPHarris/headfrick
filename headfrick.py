@@ -22,8 +22,6 @@ class Memory(list):
         return super().__setitem__(index, value)
     
     def __repr__(self) -> str:
-        # TODO Fix -- doesn't stretch
-        self.stretch(len(self) - 1)  # On print, stretch to show pointer movement
         return super().__repr__()[:-1] + ', ... ]'
 
 
@@ -93,6 +91,9 @@ class Machine:
 
     def __repr__(self) -> str:
         """Return string representation."""
+        # On print, stretch memory to show pointer movement
+        self.memory.stretch(self.pointer - 1)
+
         return self.memory.__repr__()
 
 
