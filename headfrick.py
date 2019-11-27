@@ -92,9 +92,10 @@ class Machine:
     def __repr__(self) -> str:
         """Return string representation."""
         # On print, stretch memory to show pointer movement
-        self.memory.stretch(self.pointer - 1)
+        self.memory.stretch(self.pointer)
 
-        return self.memory.__repr__()
+        memory = self.memory.__repr__()
+        return memory + '\n ' + self.pointer * '   ' + '^'
 
 
 def get_char() -> str:
