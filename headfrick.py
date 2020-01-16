@@ -60,7 +60,7 @@ class Machine:
                 self.set_current(self.memory[self.pointer] - 1)
 
             if instruction == '.':
-                print(chr(self.current()))
+                print(chr(self.memory[self.pointer]))
             if instruction == ',':
                 self.set_current(ord(get_char()))
             
