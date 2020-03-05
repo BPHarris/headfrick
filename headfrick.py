@@ -127,17 +127,21 @@ def get_char() -> str:
     return (str(input('==> ')) + '\n')[0]
 
 
-def repl(machine: Machine) -> None:
+def repl(machine: Machine) -> Machine:
     """Brainfuck REPL."""
     REPL_COMMANDS = set(['q', 'p', 'r'])
 
     while True:
         instruction = str(input('==> '))
 
-        if all([i in Machine.INSTRUCTION_SET | set('p') for i in instruction]):
+        if all(i in Machine.INSTRUCTION_SET | set('p') for i in instruction):
             machine.run_program(instruction)
         if any(i not in Machine.INSTRUCTION_SET | REPL_COMMANDS for i in instruction):
             print('Invalid instruction.')
+            continue
+
+        if 'p' in instruction[:-1]:
+            print('Print command only valid at the end of an instruction.')
             continue
 
         if instruction == 'q':          # q : quit repl
@@ -147,7 +151,7 @@ def repl(machine: Machine) -> None:
         if instruction == 'r':          # r : reset machine
             machine = Machine()
     
-    return None
+    return machine
 
 
 def main(args: Dict) -> None:
@@ -163,7 +167,7 @@ def main(args: Dict) -> None:
         quit()
 
     if not args['FILE']:
-        repl(machine)
+        machine = repl(machine)
     else:
         machine.run_program(args.file.read())
         args.file.close()
