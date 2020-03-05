@@ -163,13 +163,15 @@ def main(args: Dict) -> None:
         quit()
 
     if not args['FILE']:
-        machine = repl(machine)
-    else:
-        if not isfile(args['FILE']):
-            print(f'headfrick.py: {args["FILE"]} does not exist')
-            quit()
-        machine.run_program(args.file.read())
-        args.file.close()
+        print(repl(machine))
+        quit()
+
+    if not isfile(args['FILE']):
+        print(f'headfrick.py: {args["FILE"]} does not exist')
+        quit()
+
+    with open(args['FILE']) as file:
+        machine.run_program(file.read())
 
     if args['--dump']:
         print(machine)
