@@ -30,15 +30,11 @@ class Memory(list):
             self += [0] * (index - len(self) + 1)
 
     def __getitem__(self, index: int) -> int:
-        # On read from cell, stretch memory if needed
-        self.stretch(index)
-
+        self.stretch(index)     # stretch memory to current index (if needed)
         return super().__getitem__(index)
 
     def __setitem__(self, index: int, value: int) -> int:
-        # On write to cell, stretch memory if needed
-        self.stretch(index)
-
+        self.stretch(index)     # stretch memory to current index (if needed)
         return super().__setitem__(index, value)
 
     def __repr__(self) -> str:
