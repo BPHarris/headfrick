@@ -42,7 +42,7 @@ class Memory(list):
         return super().__setitem__(index, value)
 
     def __repr__(self) -> str:
-        return super().__repr__()[:-1] + ', ... ]'
+        return '[' + ', '.join(f'{i:03}' for i in self) + ']'
 
 
 class Machine:
@@ -115,11 +115,8 @@ class Machine:
 
     def __repr__(self) -> str:
         """Return string representation."""
-        # On print, stretch memory to show pointer movement
-        self.memory.stretch(self.pointer)
-
-        # TODO: Fix tracking when numbers > 1 digit
-        return str(self.memory) + '\n ' + self.pointer * '   ' + '^'
+        self.memory.stretch(self.pointer)   # stretch to show pointer movement
+        return str(self.memory) + '\n ' + self.pointer * '     ' + '^'
 
 
 def get_char() -> str:
