@@ -162,13 +162,12 @@ def main(args: Dict) -> None:
         print(f'headfrick.py: version {__version__}')
         quit()
 
-    if not isfile(args['FILE']):
-        print(f'headfrick.py: {args["FILE"]} does not exist')
-        quit()
-
     if not args['FILE']:
         machine = repl(machine)
     else:
+        if not isfile(args['FILE']):
+            print(f'headfrick.py: {args["FILE"]} does not exist')
+            quit()
         machine.run_program(args.file.read())
         args.file.close()
 
