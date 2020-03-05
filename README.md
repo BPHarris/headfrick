@@ -8,7 +8,7 @@ Fully-feature complete, implemented in under 200 lines.
 - [Licence](#licence)
 
 # Dependencies
-- `docopt` to install run `pip install docopt==0.6.2` on Windows,
+- `docopt` ([http://docopt.org](docopt)) to install run `pip install docopt==0.6.2` on Windows,
   or `pip3 install docopt==0.6.2` on *nix.
 
 # Licence
