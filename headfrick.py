@@ -42,6 +42,8 @@ class Memory(list):
         return super().__setitem__(index, value)
 
     def __repr__(self) -> str:
+        # TODO Add option for printing in binary
+        # TODO Print first three, currently pointed to +/- 1, and last three
         return '[' + ', '.join(f'{i:03}' for i in self) + ']'
 
 
