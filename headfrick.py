@@ -1,6 +1,21 @@
-"""headfrick.py - A simple brainfuck interpreter."""
+"""headfrick.py -- A simple brainfuck interpreter.
 
-from argparse import ArgumentParser, FileType
+Interpret a brainfuck file. If no file is given, run the REPL.
+
+Usage:  headfrick.py [[-d] FILE | -h | -v]
+
+-h, --help      show this message
+-d, --dump      print the machine state on exit
+-v, --version   display the interpreter version
+
+"""
+
+from typing import Dict
+from docopt import docopt
+from os.path import isfile
+
+
+__version__ = '0.1.1a'
 
 
 class Memory(list):
@@ -135,34 +150,27 @@ def repl(machine: Machine) -> None:
     return None
 
 
-def main() -> None:
-    """Parse arguments; run REPL if no file, otherwise exec file."""
-    parser = ArgumentParser(
-        description='Interpret a brainfuck file. If no file is given, run the REPL.'
-    )
-    parser.add_argument(
-        'file', nargs='?', type=FileType('r'), help='the brainfuck source code file'
-    )
-    parser.add_argument(
-        '-d', '--dump', default=False, action='store_const', const=True,
-        help='print the machine state on exit?'
-    )
-
-    args = parser.parse_args()
-
+def main(args: Dict) -> None:
+    """Interpreter entry point."""
     machine = Machine()
 
-    if not args.file:
+    if args['--version']:
+        print(f'headfrick.py: version {__version__}')
+        quit()
+
+    if not isfile(args['FILE']):
+        print(f'headfrick.py: {args["FILE"]} does not exist')
+        quit()
+
+    if not args['FILE']:
         repl(machine)
     else:
         machine.run_program(args.file.read())
         args.file.close()
 
-    if args.dump:
+    if args['--dump']:
         print(machine)
-
-    return None
 
 
 if __name__ == '__main__':
-    main()
+    main(docopt(__doc__))
